@@ -7,12 +7,12 @@ const calendar = google.calendar({ version: "v3", auth: oauth2Client });
 export const createEvent = async (req, res) => {
   try {
     const user = req.user;
-    const { summary, description, startTime, endTime } = req.body;
+    const { title, description, startTime, endTime } = req.body;
 
     if (!user) return res.status(404).json({ message: "User not found" });
 
     const event = {
-      summary,
+      title,
       description,
       start: { dateTime: startTime, timeZone: "Asia/Kolkata" },
       end: { dateTime: endTime, timeZone: "Asia/Kolkata" },
@@ -41,7 +41,7 @@ export const createEvent = async (req, res) => {
     const newEvent = new Event({
       user: user._id,
       googleEventId,
-      summary,
+      title,
       description,
       startTime,
       endTime,
@@ -61,7 +61,7 @@ export const updateEvent = async (req, res) => {
   try {
     const user = req.user;
     const { eventId } = req.params;
-    const { summary, description, startTime, endTime } = req.body;
+    const { title, description, startTime, endTime } = req.body;
 
     if (!user) return res.status(404).json({ message: "User not found" });
 
@@ -80,7 +80,7 @@ export const updateEvent = async (req, res) => {
       calendarId: "primary",
       eventId: googleEventId,
       resource: {
-        summary,
+        title,
         description,
         start: { dateTime: startTime, timeZone: "Asia/Kolkata" },
         end: { dateTime: endTime, timeZone: "Asia/Kolkata" },
@@ -90,7 +90,7 @@ export const updateEvent = async (req, res) => {
     // update in DB
     const updatedEvent = await Event.findOneAndUpdate(
       { googleEventId: eventId },
-      { summary, description, startTime, endTime },
+      { title, description, startTime, endTime },
       { new: true }
     );
 
@@ -147,11 +147,20 @@ export const getEvents = async (req, res) => {
     const dbEvents = await Event.find({ user: user._id });
 
     // showing if both events are matching
-    const matchEvents = googleEvents.filter((gEvent) =>
-      dbEvents.some((dbEvent) => dbEvent.googleEventId === gEvent.id)
+    const matchedEvents = dbEvents.filter((dbEvent) =>
+      googleEvents.some((gEvent) => gEvent.id === dbEvent.googleEventId)
     );
 
-    res.status(200).json(matchEvents);
+    const filteredEvents = matchedEvents.map((event) => ({
+      id: event._id,
+      title: event.title,
+      startTime: event.startTime,
+      endTime: event.endTime,
+      description: event.description,
+      meetLink: event.meetLink,
+    }));
+
+    res.status(200).json(filteredEvents);
   } catch (error) {
     console.error("Error fetching events: ", error);
     res.status(500).json({ message: error.message });

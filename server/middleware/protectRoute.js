@@ -11,7 +11,6 @@ export const protectRoute = async (req, res, next) => {
     if (!decoded) return res.status(401).json({ error: "Invalid token" });
 
     const user = await User.findById(decoded.userId);
-
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
@@ -26,6 +25,8 @@ export const protectRoute = async (req, res, next) => {
       access_token: user.accessToken,
       refresh_token: user.refreshToken,
     });
+
+    oauth2Client.removeAllListeners("tokens");
 
     oauth2Client.on("tokens", async (tokens) => {
       if (tokens.access_token) {

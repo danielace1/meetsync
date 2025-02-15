@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import "dotenv/config";
 import { google } from "googleapis";
 import { oauth2Client } from "../lib/authClient.js";
 import User from "../models/user.model.js";
@@ -30,6 +31,8 @@ export const register = async (req, res) => {
   try {
     const { tokens } = await oauth2Client.getToken(code);
 
+    // console.log("Tokens:", tokens);
+
     oauth2Client.setCredentials(tokens);
 
     const oauth2 = google.oauth2({ version: "v2", auth: oauth2Client });
@@ -55,6 +58,7 @@ export const register = async (req, res) => {
     }
 
     await user.save();
+
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
       expiresIn: "1d",
     });
@@ -62,11 +66,14 @@ export const register = async (req, res) => {
     res.cookie("jwt", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "none",
+      sameSite: "Lax",
       maxAge: 24 * 60 * 60 * 1000,
     });
 
-    res.json({ message: "Google Auth Successful!", user, tokens, jwt: token });
+    res.redirect(`${process.env.LOCAL_CLIENT_URL}/home`);
+    // res.redirect(`${process.env.PRODUCTION_CLIENT_URL}/home`);
+
+    // res.json({ message: "Google Auth Successful!", user, tokens, jwt: token });
   } catch (error) {
     console.error("Error during OAuth:", error);
     res.status(500).json({ error: "Authentication failed" });
@@ -79,7 +86,15 @@ export const getProfile = async (req, res) => {
     if (!user) return res.status(404).json({ message: "User not found" });
     const events = await Event.find({ user: user._id });
 
-    res.status(200).json({ user, events });
+    res.status(200).json({
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        profilePic: user.profilePic,
+      },
+      events,
+    });
   } catch (error) {
     console.log("Error fetching profile: ", error);
     res.status(500).json({ message: error.message });

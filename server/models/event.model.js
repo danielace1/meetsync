@@ -13,7 +13,7 @@ const eventSchema = new mongoose.Schema(
       required: true,
     },
 
-    summary: {
+    title: {
       type: String,
       required: true,
     },
@@ -29,7 +29,6 @@ const eventSchema = new mongoose.Schema(
 
     endTime: {
       type: Date,
-      required: true,
     },
 
     meetLink: {
