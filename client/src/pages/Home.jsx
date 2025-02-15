@@ -9,11 +9,22 @@ const Home = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [copiedEventId, setCopiedEventId] = useState(null);
 
-  // Function to copy meet link
-  const copyMeetLink = (link, eventId) => {
-    navigator.clipboard.writeText(link);
-    setCopiedEventId(eventId);
-    setTimeout(() => setCopiedEventId(null), 2000); // Reset after 2s
+  const shareMeetLink = async (event) => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: event.title,
+          text: `Meeting Details:\nJoin with Google Meet: ${event.meetLink}\n\nLooking forward to seeing you there!`,
+          url: event.meetLink,
+        });
+      } catch (error) {
+        console.error("Error sharing:", error);
+      }
+    } else {
+      navigator.clipboard.writeText(event.meetLink);
+      setCopiedEventId(event.id);
+      setTimeout(() => setCopiedEventId(null), 2000);
+    }
   };
 
   const { user } = useAuthStore();
@@ -62,7 +73,7 @@ const Home = () => {
           events?.map((event) => (
             <div
               key={event.id}
-              className="relative bg-white p-6 rounded-xl shadow-lg border border-gray-200 transition-all hover:shadow-2xl hover:scale-[1.03] group"
+              className="relative bg-white p-6 rounded-xl shadow-lg border border-gray-200 transition-all hover:shadow-2xl hover:scale-[1.01] group"
             >
               <div className="absolute -top-5 -left-4 bg-white p-2 rounded-full shadow-md">
                 <img
@@ -83,7 +94,7 @@ const Home = () => {
 
               <p className="text-gray-700 mt-3 text-sm">{event.description}</p>
 
-              <div className="mt-4 flex items-center gap-3">
+              <div className="mt-4 flex items-center gap-4">
                 <a
                   href={event.meetLink}
                   target="_blank"
@@ -93,10 +104,10 @@ const Home = () => {
                   🔗 Join Meet
                 </a>
                 <button
-                  onClick={() => copyMeetLink(event.meetLink, event.id)}
-                  className="text-gray-600 hover:text-green-600 transition-all"
+                  onClick={() => shareMeetLink(event)}
+                  className="text-gray-600 hover:text-yellow-500 transition-all cursor-pointer"
                 >
-                  <FaShareAlt size={18} />
+                  <FaShareAlt size={19} />
                 </button>
                 {copiedEventId === event.id && (
                   <span className="text-green-500 text-xs">Copied!</span>
@@ -111,7 +122,7 @@ const Home = () => {
                   onClick={() => deleteEvent(event.id)}
                   className="text-gray-600 hover:text-red-500 hover:scale-105 transition-all cursor-pointer"
                 >
-                  <FaTrash size={20} />
+                  <FaTrash size={19} />
                 </button>
               </div>
             </div>
