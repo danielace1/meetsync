@@ -7,7 +7,7 @@ const calendar = google.calendar({ version: "v3", auth: oauth2Client });
 export const createEvent = async (req, res) => {
   try {
     const user = req.user;
-    const { summary, description, startTime, endTime, location } = req.body;
+    const { summary, description, startTime, endTime } = req.body;
 
     if (!user) return res.status(404).json({ message: "User not found" });
 
@@ -16,15 +16,25 @@ export const createEvent = async (req, res) => {
       description,
       start: { dateTime: startTime, timeZone: "Asia/Kolkata" },
       end: { dateTime: endTime, timeZone: "Asia/Kolkata" },
-      location,
+      conferenceData: {
+        createRequest: {
+          requestId: new Date().toISOString(),
+          conferenceSolutionKey: { type: "hangoutsMeet" },
+        },
+      },
     };
 
     const response = await calendar.events.insert({
       calendarId: "primary",
       resource: event,
+      conferenceDataVersion: 1,
     });
 
     const googleEventId = response.data.id;
+
+    const meetLink = response.data.conferenceData?.entryPoints?.find(
+      (entry) => entry.entryPointType === "video"
+    )?.uri;
 
     // console.log("RESPONSE :", response.data);
 
@@ -35,7 +45,7 @@ export const createEvent = async (req, res) => {
       description,
       startTime,
       endTime,
-      location,
+      meetLink,
     });
 
     await newEvent.save();

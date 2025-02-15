@@ -32,8 +32,9 @@ const eventSchema = new mongoose.Schema(
       required: true,
     },
 
-    location: {
+    meetLink: {
       type: String,
+      required: true,
     },
   },
   { timestamps: true }

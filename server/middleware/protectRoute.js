@@ -16,6 +16,12 @@ export const protectRoute = async (req, res, next) => {
       return res.status(404).json({ message: "User not found" });
     }
 
+    if (!user.accessToken || !user.refreshToken) {
+      return res
+        .status(401)
+        .json({ error: "Session expired, please log in again" });
+    }
+
     oauth2Client.setCredentials({
       access_token: user.accessToken,
       refresh_token: user.refreshToken,
@@ -28,8 +34,8 @@ export const protectRoute = async (req, res, next) => {
       }
     });
 
-    req.auth = oauth2Client;
     req.user = user;
+    req.auth = oauth2Client;
     next();
   } catch (error) {
     console.error("Error in middleware:", error);

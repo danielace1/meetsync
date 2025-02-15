@@ -11,7 +11,7 @@ const router = express.Router();
 
 router.get("/", protectRoute, getEvents);
 router.post("/create", protectRoute, createEvent);
-router.put("/update/:eventId", protectRoute, updateEvent);
+router.put("/:eventId", protectRoute, updateEvent);
 router.delete("/delete/:eventId", protectRoute, deleteEvent);
 
 export default router;

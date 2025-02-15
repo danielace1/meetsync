@@ -7,10 +7,11 @@ import Event from "../models/event.model.js";
 export const authUrl = (req, res) => {
   const authUrl = oauth2Client.generateAuthUrl({
     access_type: "offline",
-    // prompt: "consent",
+    prompt: "consent",
     scope: [
       "https://www.googleapis.com/auth/calendar",
       "https://www.googleapis.com/auth/userinfo.email",
+      "https://www.googleapis.com/auth/userinfo.profile",
     ],
   });
 
@@ -29,32 +30,31 @@ export const register = async (req, res) => {
   try {
     const { tokens } = await oauth2Client.getToken(code);
 
-    // console.log("Tokens:", tokens);
-
     oauth2Client.setCredentials(tokens);
 
     const oauth2 = google.oauth2({ version: "v2", auth: oauth2Client });
+
     const { data: userInfo } = await oauth2.userinfo.get();
 
-    // console.log("User Info:", userInfo, userInfo.data);
+    // console.log("User Info:", userInfo);
 
     let user = await User.findOne({ email: userInfo.email });
 
     if (!user) {
       user = new User({
-        email: userInfo.email,
         name: userInfo.name,
+        email: userInfo.email,
+        profilePic: userInfo.picture,
         accessToken: tokens.access_token,
         refreshToken: tokens.refresh_token,
       });
-
-      await user.save();
     } else {
       user.accessToken = tokens.access_token;
+
       if (tokens.refresh_token) user.refreshToken = tokens.refresh_token;
-      await user.save();
     }
 
+    await user.save();
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
       expiresIn: "1d",
     });
