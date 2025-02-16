@@ -24,10 +24,18 @@ app.use("/api/auth", authRoutes);
 app.use("/api/event", eventRoutes);
 
 app.get("/", (req, res) => {
-  res.send("Hello World");
+  res.send("Welcome to MeetSync!");
 });
 
-app.listen(PORT, () => {
-  connectDB();
-  console.log(`Server is running on port http://localhost:${PORT}`);
-});
+const startServer = async () => {
+  try {
+    await connectDB();
+    app.listen(PORT, () => {
+      console.log(`Server is running on port http://localhost:${PORT}`);
+    });
+  } catch (error) {
+    console.log("Failed to connect to the database.");
+  }
+};
+
+startServer();
