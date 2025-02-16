@@ -24,7 +24,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/event", eventRoutes);
 
 app.get("/", (req, res) => {
-  res.send("Welcome to MeetSync");
+  res.send("Welcome to MeetSync!");
 });
 
 const startServer = async () => {
