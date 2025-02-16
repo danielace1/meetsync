@@ -67,41 +67,40 @@ const Home = () => {
         <img
           src="/logo.png"
           alt="MeetSync"
-          className="w-12 h-12 drop-shadow-lg"
+          className="w-10 h-10 md:w-12 md:h-12 drop-shadow-lg"
         />
-        <h1 className="text-4xl font-extrabold text-gray-900 tracking-wide">
+        <h1 className="text-2xl md:text-4xl font-extrabold text-gray-900 tracking-wide">
           MeetSync
         </h1>
       </div>
 
       {/* Profile */}
-      <div className="w-full max-w-4xl bg-white/70 backdrop-blur-md shadow-xl p-6 flex items-center justify-between rounded-2xl border border-gray-300 transition-all">
-        <div className="flex items-center gap-4">
+      <div className="w-full max-w-4xl bg-white/70 backdrop-blur-md shadow-xl p-4 md:p-6 flex items-center justify-between rounded-2xl border border-gray-300 transition-all">
+        <div className="flex items-center gap-3 md:gap-4">
           <img
             src={
               user?.profilePic ||
               `https://ui-avatars.com/api/?background=random&size=36&rounded=true&name=${user?.name}`
             }
             alt={user?.name}
-            className="w-16 h-16 rounded-full border-3 border-blue-500 shadow-md transition-transform transform hover:scale-110"
+            className="w-12 h-12 md:w-16 md:h-16 rounded-full border-2 md:border-3 border-blue-500 shadow-md transition-transform transform hover:scale-110"
             referrerPolicy="no-referrer"
           />
-          <h2 className="text-2xl font-bold text-gray-800">
+          <h2 className="text-lg md:text-2xl font-bold text-gray-800">
             Hi 👋, {user?.name || "User"}
           </h2>
         </div>
 
         <button
           onClick={handleLogout}
-          className="p-3 rounded-full text-red-500 transition-all shadow-md cursor-pointer hover:bg-red-100"
+          className="p-2 md:p-3 rounded-full text-red-500 transition-all shadow-md cursor-pointer hover:bg-red-100"
           title="Logout"
         >
-          <FaPowerOff size={20} />
+          <FaPowerOff size={18} md:size={20} />
         </button>
       </div>
-
       {/* Event Card */}
-      <div className="w-full max-w-4xl mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 px-6">
+      <div className="w-full max-w-4xl mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 px-4">
         {events?.length > 0 ? (
           events?.map((event) => (
             <div
@@ -181,9 +180,9 @@ const Home = () => {
 
       <button
         onClick={openModal}
-        className="fixed bottom-8 right-8 bg-blue-500 text-white p-5 rounded-full shadow-2xl hover:bg-blue-600 transition-all animate-bounce cursor-pointer"
+        className="fixed bottom-3 md:bottom-8 right-2 md:right-8 bg-blue-500 text-white p-4 md:p-5 rounded-full shadow-2xl hover:bg-blue-600 transition-all cursor-pointer z-10 animate-bounce"
       >
-        <FaPlus size={24} />
+        <FaPlus className="size-5 md:size-6" />
       </button>
 
       <CreateEventModal

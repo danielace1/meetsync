@@ -43,7 +43,6 @@ const CreateMeetingModal = ({ isOpen, onClose, event }) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  console.log(event);
   const handleSubmit = (e) => {
     e.preventDefault();
     // console.log(formData);

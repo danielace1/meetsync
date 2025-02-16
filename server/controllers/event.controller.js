@@ -1,4 +1,5 @@
 import { google } from "googleapis";
+import cron from "node-cron";
 import { oauth2Client } from "../lib/authClient.js";
 import Event from "../models/event.model.js";
 
@@ -167,3 +168,14 @@ export const getEvents = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+// delete expired events every hour
+cron.schedule("0 * * * *", async () => {
+  try {
+    const now = new Date();
+    await Event.deleteMany({ endTime: { $lt: now } });
+    console.log("Expired events deleted successfully!");
+  } catch (error) {
+    console.error("Error deleting expired events:", error);
+  }
+});

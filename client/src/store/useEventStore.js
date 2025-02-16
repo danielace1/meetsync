@@ -19,10 +19,10 @@ export const useEventStore = create((set) => ({
 
       await useEventStore.getState().fetchEvents();
 
-      set((state) => ({
-        events: [...state.events, response.data],
-        loading: false,
-      }));
+      // set((state) => ({
+      //   events: [...state.events, response.data],
+      //   loading: false,
+      // }));
 
       toast.success("Meet scheduled successfully!");
     } catch (error) {
@@ -80,7 +80,7 @@ export const useEventStore = create((set) => ({
     set({ loading: true });
     try {
       const response = await axios.get("/event");
-      console.log("Fetched events: ", response.data);
+      // console.log("Fetched events: ", response.data);
 
       set({ events: response.data, loading: false });
     } catch (error) {
