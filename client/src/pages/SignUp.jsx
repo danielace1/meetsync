@@ -10,7 +10,7 @@ const SignUp = () => {
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-400 via-indigo-600 to-purple-700 p-4 relative overflow-hidden">
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-400 via-indigo-600 to-purple-700 relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-white/5 blur-2xl opacity-20"></div>
 
       <div className="relative bg-white/10 backdrop-blur-md shadow-2xl rounded-2xl p-10 w-full max-w-lg text-center border border-white/30 transition-all hover:shadow-[0px_0px_30px_rgba(255,255,255,0.2)]">
