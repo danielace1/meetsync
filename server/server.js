@@ -27,15 +27,16 @@ app.get("/", (req, res) => {
   res.send("Welcome to MeetSync!");
 });
 
-const startServer = async () => {
-  try {
-    await connectDB();
-    app.listen(PORT, () => {
-      console.log(`Server is running on port http://localhost:${PORT}`);
-    });
-  } catch (error) {
-    console.log("Failed to connect to the database.");
-  }
-};
+// const startServer = async () => {
+//   try {
+//     await connectDB();
+//     app.listen(PORT, () => {
+//       console.log(`Server is running on port http://localhost:${PORT}`);
+//     });
+//   } catch (error) {
+//     console.log("Failed to connect to the database.");
+//   }
+// };
 
-startServer();
+// startServer();
+export default app;
