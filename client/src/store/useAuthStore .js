@@ -16,6 +16,18 @@ export const useAuthStore = create((set) => ({
     }
   },
 
+  logout: async ({ navigate }) => {
+    set({ loading: true });
+    try {
+      await axios.post("/auth/logout");
+      set({ user: null, loading: false });
+
+      navigate("/");
+    } catch (error) {
+      console.error("Failed to logout:", error);
+    }
+  },
+
   fetchUser: async () => {
     set({ fetchingUser: true });
     try {

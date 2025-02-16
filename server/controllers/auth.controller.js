@@ -8,7 +8,7 @@ import Event from "../models/event.model.js";
 export const authUrl = (req, res) => {
   const authUrl = oauth2Client.generateAuthUrl({
     access_type: "offline",
-    prompt: "consent",
+    // prompt: "consent",
     scope: [
       "https://www.googleapis.com/auth/calendar",
       "https://www.googleapis.com/auth/userinfo.email",
@@ -93,7 +93,6 @@ export const getProfile = async (req, res) => {
         email: user.email,
         profilePic: user.profilePic,
       },
-      events,
     });
   } catch (error) {
     console.log("Error fetching profile: ", error);
@@ -103,7 +102,11 @@ export const getProfile = async (req, res) => {
 
 export const logout = async (req, res) => {
   try {
-    res.clearCookie("token");
+    res.clearCookie("jwt", {
+      httpOnly: true,
+      secure: false,
+      sameSite: "Lax",
+    });
     res.json({ message: "Logged out successfully" });
   } catch (error) {
     console.log("Error logging out: ", error);

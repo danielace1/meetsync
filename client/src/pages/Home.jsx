@@ -1,6 +1,14 @@
 import { useEffect, useState } from "react";
-import { FaEdit, FaTrash, FaPlus, FaShareAlt } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import {
+  FaEdit,
+  FaTrash,
+  FaPlus,
+  FaShareAlt,
+  FaPowerOff,
+} from "react-icons/fa";
 import dayjs from "dayjs";
+
 import { useAuthStore } from "../store/useAuthStore ";
 import { useEventStore } from "../store/useEventStore";
 import CreateEventModal from "../components/createEventModal";
@@ -10,8 +18,9 @@ const Home = () => {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [copiedEventId, setCopiedEventId] = useState(null);
+  const navigate = useNavigate();
 
-  const { user } = useAuthStore();
+  const { user, logout } = useAuthStore();
   const { events, fetchEvents, deleteEvent } = useEventStore();
 
   useEffect(() => {
@@ -48,6 +57,10 @@ const Home = () => {
     }
   };
 
+  const handleLogout = () => {
+    logout({ navigate });
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-r from-blue-100 to-purple-200 flex flex-col items-center py-5">
       <div className="flex items-center space-x-3 mb-6">
@@ -61,6 +74,7 @@ const Home = () => {
         </h1>
       </div>
 
+      {/* Profile */}
       <div className="w-full max-w-4xl bg-white/70 backdrop-blur-md shadow-xl p-6 flex items-center justify-between rounded-2xl border border-gray-300 transition-all">
         <div className="flex items-center gap-4">
           <img
@@ -76,6 +90,14 @@ const Home = () => {
             Hi 👋, {user?.name || "User"}
           </h2>
         </div>
+
+        <button
+          onClick={handleLogout}
+          className="p-3 rounded-full text-red-500 transition-all shadow-md cursor-pointer hover:bg-red-100"
+          title="Logout"
+        >
+          <FaPowerOff size={20} />
+        </button>
       </div>
 
       {/* Event Card */}
@@ -143,9 +165,17 @@ const Home = () => {
             </div>
           ))
         ) : (
-          <p className="text-gray-600 mt-5 text-lg">
-            No events yet. Click the + button to create one.
-          </p>
+          <div className="col-span-2 flex flex-col items-center justify-center w-full h-[400px]">
+            <img
+              src="/no-events.webp"
+              className="w-56 h-56 opacity-75"
+              alt="No Meets"
+            />
+            <p className="text-gray-500 mt-4 text-lg text-center max-w-md">
+              No Google Meets scheduled yet. Start a new meeting and connect
+              with your team!
+            </p>
+          </div>
         )}
       </div>
 
