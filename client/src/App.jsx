@@ -19,7 +19,7 @@ const App = () => {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <TheHeader /> {/* GitHub Icon now persists on all pages */}
+      <TheHeader />
       <div className="flex-grow">
         <Routes>
           <Route
