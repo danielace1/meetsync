@@ -5,6 +5,7 @@ import { Toaster } from "react-hot-toast";
 import { useAuthStore } from "./store/useAuthStore ";
 import SignUp from "./pages/SignUp";
 import Home from "./pages/Home";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TheHeader from "./components/TheHeader";
 import Footer from "./components/Footer";
 
@@ -27,6 +28,8 @@ const App = () => {
             element={user ? <Navigate to="/home" /> : <SignUp />}
           />
           <Route path="/home" element={user ? <Home /> : <Navigate to="/" />} />
+
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         </Routes>
       </div>
       <Footer />
