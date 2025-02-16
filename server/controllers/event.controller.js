@@ -12,7 +12,7 @@ export const createEvent = async (req, res) => {
     if (!user) return res.status(404).json({ message: "User not found" });
 
     const event = {
-      title,
+      summary: title,
       description,
       start: { dateTime: startTime, timeZone: "Asia/Kolkata" },
       end: { dateTime: endTime, timeZone: "Asia/Kolkata" },
@@ -80,7 +80,7 @@ export const updateEvent = async (req, res) => {
       calendarId: "primary",
       eventId: googleEventId,
       resource: {
-        title,
+        summary: title,
         description,
         start: { dateTime: startTime, timeZone: "Asia/Kolkata" },
         end: { dateTime: endTime, timeZone: "Asia/Kolkata" },
@@ -153,6 +153,7 @@ export const getEvents = async (req, res) => {
 
     const filteredEvents = matchedEvents.map((event) => ({
       id: event._id,
+      googleEventId: event.googleEventId,
       title: event.title,
       startTime: event.startTime,
       endTime: event.endTime,

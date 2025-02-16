@@ -7,6 +7,7 @@ const DateTimeInput = ({
   selected,
   onChange,
   minDate,
+  minTime,
   placeholder,
   disabled,
 }) => {
@@ -21,7 +22,7 @@ const DateTimeInput = ({
         timeIntervals={15}
         dateFormat="dd-MM-yyyy hh:mm aa"
         minDate={minDate}
-        minTime={new Date()}
+        minTime={minTime}
         maxTime={new Date().setHours(23, 59, 59)}
         className={`w-full outline-none pl-12 border border-gray-300 rounded-lg p-4 focus:ring-1 focus:ring-blue-400 shadow-sm text-lg ${
           disabled ? "cursor-not-allowed bg-gray-100" : "cursor-pointer"
@@ -39,6 +40,7 @@ DateTimeInput.propTypes = {
   selected: PropTypes.instanceOf(Date),
   onChange: PropTypes.func,
   minDate: PropTypes.instanceOf(Date),
+  minTime: PropTypes.instanceOf(Date),
   placeholder: PropTypes.string,
   disabled: PropTypes.bool,
 };

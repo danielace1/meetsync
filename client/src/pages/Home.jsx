@@ -7,7 +7,28 @@ import CreateEventModal from "../components/createEventModal";
 
 const Home = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [copiedEventId, setCopiedEventId] = useState(null);
+
+  const { user } = useAuthStore();
+  const { events, fetchEvents, deleteEvent } = useEventStore();
+
+  useEffect(() => {
+    fetchEvents();
+  }, []);
+
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setIsEditModalOpen(false);
+    setSelectedEvent(null);
+  };
+  const editModal = (event) => {
+    setSelectedEvent(event);
+    setIsEditModalOpen(true);
+    setIsModalOpen(false);
+  };
 
   const shareMeetLink = async (event) => {
     if (navigator.share) {
@@ -26,16 +47,6 @@ const Home = () => {
       setTimeout(() => setCopiedEventId(null), 2000);
     }
   };
-
-  const { user } = useAuthStore();
-  const { events, fetchEvents, deleteEvent } = useEventStore();
-
-  useEffect(() => {
-    fetchEvents();
-  }, []);
-
-  const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
 
   return (
     <div className="min-h-screen bg-gradient-to-r from-blue-100 to-purple-200 flex flex-col items-center py-5">
@@ -110,16 +121,20 @@ const Home = () => {
                   <FaShareAlt size={19} />
                 </button>
                 {copiedEventId === event.id && (
-                  <span className="text-green-500 text-xs">Copied!</span>
+                  <span className="text-yellow-500 text-xs">Copied!</span>
                 )}
               </div>
 
+              {/* Edit and delete */}
               <div className="absolute top-5 right-5 flex gap-3">
-                <button className="text-gray-600 hover:text-blue-500 hover:scale-110 transition-all cursor-pointer">
+                <button
+                  onClick={() => editModal(event)}
+                  className="text-gray-600 hover:text-blue-500 hover:scale-110 transition-all cursor-pointer"
+                >
                   <FaEdit size={20} />
                 </button>
                 <button
-                  onClick={() => deleteEvent(event.id)}
+                  onClick={() => deleteEvent(event.googleEventId)}
                   className="text-gray-600 hover:text-red-500 hover:scale-105 transition-all cursor-pointer"
                 >
                   <FaTrash size={19} />
@@ -141,7 +156,12 @@ const Home = () => {
         <FaPlus size={24} />
       </button>
 
-      <CreateEventModal isOpen={isModalOpen} onClose={closeModal} />
+      <CreateEventModal
+        isOpen={isModalOpen || isEditModalOpen}
+        onClose={closeModal}
+        onEdit={editModal}
+        event={selectedEvent}
+      />
     </div>
   );
 };

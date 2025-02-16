@@ -1,10 +1,10 @@
 import PropTypes from "prop-types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaTimes, FaAlignLeft } from "react-icons/fa";
 import DateTimeInput from "./DateTimeInput";
 import { useEventStore } from "../store/useEventStore";
 
-const CreateMeetingModal = ({ isOpen, onClose }) => {
+const CreateMeetingModal = ({ isOpen, onClose, event }) => {
   const [formData, setFormData] = useState({
     title: "",
     startTime: undefined,
@@ -12,7 +12,18 @@ const CreateMeetingModal = ({ isOpen, onClose }) => {
     description: "",
   });
 
-  const { createEvent } = useEventStore();
+  const { createEvent, updateEvent } = useEventStore();
+
+  useEffect(() => {
+    if (event) {
+      setFormData({
+        title: event.title || "",
+        startTime: event.startTime ? new Date(event.startTime) : null,
+        endTime: event.endTime ? new Date(event.endTime) : null,
+        description: event.description || "",
+      });
+    }
+  }, [event]);
 
   if (!isOpen) return null;
 
@@ -32,11 +43,16 @@ const CreateMeetingModal = ({ isOpen, onClose }) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  console.log(event);
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(formData);
+    // console.log(formData);
 
-    createEvent(formData);
+    if (event) {
+      updateEvent({ eventId: event.googleEventId, ...formData });
+    } else {
+      createEvent(formData);
+    }
 
     setFormData({
       title: "",
@@ -91,6 +107,7 @@ const CreateMeetingModal = ({ isOpen, onClose }) => {
             selected={formData.startTime}
             onChange={handleStartTimeChange}
             minDate={new Date()}
+            minTime={new Date()}
             placeholder="Start Time"
             required
           />
@@ -99,6 +116,9 @@ const CreateMeetingModal = ({ isOpen, onClose }) => {
             selected={formData.endTime}
             onChange={handleEndTimeChange}
             minDate={formData.startTime || new Date()}
+            minTime={
+              formData.startTime ? new Date(formData.startTime) : new Date()
+            }
             disabled={!formData.startTime}
             placeholder="End Time"
           />
@@ -125,6 +145,7 @@ const CreateMeetingModal = ({ isOpen, onClose }) => {
 CreateMeetingModal.propTypes = {
   isOpen: PropTypes.bool,
   onClose: PropTypes.func,
+  event: PropTypes.object,
 };
 
 export default CreateMeetingModal;

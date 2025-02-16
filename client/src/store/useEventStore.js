@@ -17,6 +17,8 @@ export const useEventStore = create((set) => ({
         description,
       });
 
+      await useEventStore.getState().fetchEvents();
+
       set((state) => ({
         events: [...state.events, response.data],
         loading: false,
@@ -29,9 +31,53 @@ export const useEventStore = create((set) => ({
     }
   },
 
-  fetchEvents: async () => {
+  updateEvent: async ({ eventId, title, startTime, endTime, description }) => {
     set({ loading: true });
 
+    try {
+      const response = await axios.put(`/event/${eventId}`, {
+        eventId,
+        title,
+        startTime,
+        endTime,
+        description,
+      });
+
+      set((state) => ({
+        events: state.events.map((event) =>
+          event.id === eventId ? { ...event, ...response.data.event } : event
+        ),
+        loading: false,
+      }));
+
+      toast.success("Event updated successfully!");
+      await useEventStore.getState().fetchEvents();
+    } catch (error) {
+      console.log("Error updating event: ", error.message);
+      toast.error("Failed to update event: ", error.message);
+    }
+  },
+
+  deleteEvent: async (eventId) => {
+    set({ loading: true });
+
+    try {
+      await axios.delete(`/event/${eventId}`);
+
+      set((state) => ({
+        events: state.events.filter((event) => event.googleEventId !== eventId),
+        loading: false,
+      }));
+
+      toast.success("Event deleted successfully!");
+    } catch (error) {
+      console.log("Error deleting event: ", error.message);
+      toast.error("Failed to delete event: ", error.message);
+    }
+  },
+
+  fetchEvents: async () => {
+    set({ loading: true });
     try {
       const response = await axios.get("/event");
       console.log("Fetched events: ", response.data);
