@@ -23,8 +23,9 @@ const SignUp = () => {
         </h2>
 
         <p className="text-gray-300 mb-6 text-sm">
-          Seamlessly manage and sync your meetings with Google Calendar. Stay
-          organized, stay productive!
+          MeetSync helps you create and manage meetings effortlessly with Google
+          Calendar. Sync schedules, generate Google Meet links, and stay
+          organized—all in one place.
         </p>
 
         <button
