@@ -70,8 +70,8 @@ export const register = async (req, res) => {
       maxAge: 24 * 60 * 60 * 1000,
     });
 
-    res.redirect(`${process.env.LOCAL_CLIENT_URL}/home`);
-    // res.redirect(`${process.env.PRODUCTION_CLIENT_URL}/home`);
+    // res.redirect(`${process.env.LOCAL_CLIENT_URL}/home`);
+    res.redirect(`${process.env.PRODUCTION_CLIENT_URL}/home`);
 
     // res.json({ message: "Google Auth Successful!", user, tokens, jwt: token });
   } catch (error) {
