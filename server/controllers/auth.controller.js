@@ -66,11 +66,12 @@ export const register = async (req, res) => {
     res.cookie("jwt", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "None",
+      sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
       maxAge: 24 * 60 * 60 * 1000,
     });
 
     // res.redirect(`${process.env.LOCAL_CLIENT_URL}/home`);
+
     res.redirect(`${process.env.PRODUCTION_CLIENT_URL}/home`);
 
     // res.json({ message: "Google Auth Successful!", user, tokens, jwt: token });
@@ -105,7 +106,7 @@ export const logout = async (req, res) => {
     res.clearCookie("jwt", {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "None",
+      sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
     });
     res.json({ message: "Logged out successfully" });
   } catch (error) {
