@@ -66,7 +66,8 @@ export const register = async (req, res) => {
     res.cookie("jwt", token, {
       httpOnly: true,
       secure: true,
-      sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+      // sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+      sameSite: "None",
       maxAge: 24 * 60 * 60 * 1000,
     });
 
@@ -106,7 +107,8 @@ export const logout = async (req, res) => {
     res.clearCookie("jwt", {
       httpOnly: true,
       secure: true,
-      sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+      // sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+      sameSite: "None",
     });
     res.json({ message: "Logged out successfully" });
   } catch (error) {
