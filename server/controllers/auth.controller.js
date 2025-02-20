@@ -65,7 +65,7 @@ export const register = async (req, res) => {
 
     res.cookie("jwt", token, {
       httpOnly: true,
-      secure: false,
+      secure: true,
       sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
       maxAge: 24 * 60 * 60 * 1000,
     });
@@ -105,7 +105,7 @@ export const logout = async (req, res) => {
   try {
     res.clearCookie("jwt", {
       httpOnly: true,
-      secure: false,
+      secure: true,
       sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
     });
     res.json({ message: "Logged out successfully" });
