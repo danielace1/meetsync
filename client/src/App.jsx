@@ -8,6 +8,7 @@ import Home from "./pages/Home";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TheHeader from "./components/TheHeader";
 import Footer from "./components/Footer";
+import LoadingSpinner from "./components/LoadingSpinner";
 
 const App = () => {
   const { user, fetchUser, fetchingUser } = useAuthStore();
@@ -16,7 +17,7 @@ const App = () => {
     fetchUser();
   }, [fetchUser]);
 
-  if (fetchingUser) return <div>loading...</div>;
+  if (fetchingUser) return <LoadingSpinner />;
 
   return (
     <div className="flex flex-col min-h-screen">
